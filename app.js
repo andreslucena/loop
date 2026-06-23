@@ -1365,7 +1365,7 @@ function renderDetail() {
         <div id="chat-thread" class="max-h-[45vh] space-y-2 overflow-y-auto rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
         <textarea id="opinion-input" class="mt-3 w-full rounded-xl border border-slate-300 p-3 text-sm outline-none ring-amber-300 placeholder:text-slate-400 focus:ring-4" placeholder="Type your view and press Send to chat..."></textarea>
         <div class="mt-2 flex flex-wrap justify-end gap-2">
-          <button type="button" class="rounded-xl bg-loop-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#184f8d]" id="send-chat">Send to chat</button>
+          <button type="button" class="rounded-xl bg-loop-blue [background-image:none] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#184f8d]" id="send-chat">Send to chat</button>
         </div>
         <div id="send-decision" class="mt-3 hidden flex-wrap gap-2">
           <button type="button" id="decision-send" class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white">Send my opinion to the official platform</button>
