@@ -116,7 +116,7 @@ const projects = [
       "The proposal should include easier complaint channels for citizens.",
     ],
     officialUrl:
-      "https://ec.europa.eu/info/law/better-regulation/have-your-say/initiatives_en",
+      "https://ec.europa.eu/info/law/better-regulation/have-your-say/initiatives/13601",
   },
   {
     id: "porto-river-mobility",
@@ -232,7 +232,7 @@ const projects = [
       "Mental health support needs dedicated funding from day one.",
     ],
     officialUrl:
-      "https://ec.europa.eu/info/law/better-regulation/have-your-say/initiatives_en",
+      "https://ec.europa.eu/info/law/better-regulation/have-your-say/initiatives/12515",
   },
   {
     id: "eu-grid-flex",
@@ -256,7 +256,7 @@ const projects = [
       "Community energy groups should have a fast onboarding path.",
     ],
     officialUrl:
-      "https://ec.europa.eu/info/law/better-regulation/have-your-say/initiatives_en",
+      "https://ec.europa.eu/info/law/better-regulation/have-your-say/initiatives/13936",
   },
 ];
 
