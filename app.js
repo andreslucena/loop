@@ -1263,10 +1263,12 @@ function renderResults() {
 
 function createShareLink(network, project) {
   const text = encodeURIComponent(`I found this open public project: ${project.plainTitle}`);
+  const projectSlug = encodeURIComponent(project.id || "project");
+  const loopProjectUrl = encodeURIComponent(`https://loop.eu/p/${projectSlug}`);
   const url = encodeURIComponent(project.officialUrl);
 
   if (network === "WhatsApp") {
-    return `https://wa.me/?text=${text}%20${url}`;
+    return `https://wa.me/?text=${text}%20${loopProjectUrl}`;
   }
   if (network === "X") {
     return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
