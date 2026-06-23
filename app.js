@@ -606,13 +606,13 @@ function setStep(step, options = {}) {
     const isActive = Number(marker.dataset.stepMarker) === targetStep;
     const dot = marker.querySelector("[data-step-dot]");
 
-    marker.classList.toggle("border-civic-600", isActive);
-    marker.classList.toggle("bg-civic-100", isActive);
+    marker.classList.toggle("border-loop-blue", isActive);
+    marker.classList.toggle("bg-loop-blue/10", isActive);
 
     if (dot) {
-      dot.classList.toggle("bg-civic-600", isActive);
+      dot.classList.toggle("bg-loop-blue", isActive);
       dot.classList.toggle("text-white", isActive);
-      dot.classList.toggle("border-civic-600", isActive);
+      dot.classList.toggle("border-loop-blue", isActive);
     }
   }
 
@@ -658,15 +658,16 @@ function renderCities(query = "") {
     const button = document.createElement("button");
     button.type = "button";
     button.className =
-      "w-full rounded-xl border bg-white p-4 text-left transition hover:-translate-y-0.5 hover:border-cyan-300 hover:shadow-[0_6px_16px_rgba(10,55,79,0.1)]";
+      "w-full rounded-xl border border-slate-300 bg-white p-4 text-left shadow-[0_1px_0_rgba(28,43,51,0.08)] transition hover:-translate-y-0.5 hover:border-loop-blue/70 hover:bg-loop-blue/5 hover:shadow-[0_8px_20px_rgba(31,95,168,0.2)]";
     button.setAttribute("role", "radio");
     const selected = state.cityId === city.id;
     button.setAttribute("aria-checked", String(selected));
-    button.classList.toggle("border-civic-600", selected);
+    button.classList.toggle("border-loop-blue", selected);
+    button.classList.toggle("bg-loop-blue/10", selected);
     button.classList.toggle("ring-2", selected);
-    button.classList.toggle("ring-civic-600/30", selected);
+    button.classList.toggle("ring-loop-blue/30", selected);
     if (!selected) {
-      button.classList.add("border-slate-200");
+      button.classList.add("border-slate-300");
     }
     button.innerHTML = `
       <span class="mb-1 block text-base font-semibold">${city.name}</span>
@@ -726,12 +727,15 @@ function renderTopics() {
     const chip = document.createElement("button");
     chip.type = "button";
     chip.className =
-      "rounded-full border border-slate-300 bg-white px-3 py-2 text-left text-sm transition hover:-translate-y-0.5 hover:border-cyan-300 hover:shadow-[0_6px_16px_rgba(10,55,79,0.1)]";
+      "rounded-full border border-slate-400 bg-slate-50 px-3 py-2 text-left text-sm text-slate-800 shadow-[0_1px_0_rgba(28,43,51,0.07)] transition hover:-translate-y-0.5 hover:border-loop-blue/70 hover:bg-loop-blue/5 hover:shadow-[0_6px_16px_rgba(31,95,168,0.18)]";
     chip.innerHTML = `<span class="mr-1.5">${topicMeta[topic].icon}</span>${topic}`;
     const active = state.topics.has(topic);
-    chip.classList.toggle("border-civic-600", active);
-    chip.classList.toggle("bg-civic-100", active);
+    chip.classList.toggle("border-loop-blue", active);
+    chip.classList.toggle("bg-loop-blue/10", active);
+    chip.classList.toggle("text-loop-ink", active);
     chip.classList.toggle("font-semibold", active);
+    chip.classList.toggle("ring-1", active);
+    chip.classList.toggle("ring-loop-blue/25", active);
     chip.setAttribute("aria-pressed", String(active));
     chip.addEventListener("click", () => {
       if (state.topics.has(topic)) {
@@ -831,6 +835,34 @@ function getProjectLevel(project, city) {
   }
   const orderedScopes = [city.name, ...city.levels];
   return orderedScopes.find((scope) => project.scope.includes(scope)) || project.scope[0] || "Unknown";
+}
+
+function normalizeInstitutionLevel(levelLabel) {
+  const label = (levelLabel || "").toLowerCase();
+  if (label.includes("european") || label.includes("union")) {
+    return "european";
+  }
+  if (label.includes("region") || label.includes("county") || label.includes("state") || label.includes("province")) {
+    return "regional";
+  }
+  if (label.includes("country") || label.includes("national") || label.includes("portugal") || label.includes("spain") || label.includes("france") || label.includes("germany") || label.includes("italy") || label.includes("poland") || label.includes("estonia") || label.includes("ireland") || label.includes("belgium") || label.includes("netherlands") || label.includes("austria") || label.includes("czech") || label.includes("romania") || label.includes("bulgaria") || label.includes("croatia") || label.includes("slovenia") || label.includes("slovakia") || label.includes("denmark") || label.includes("sweden") || label.includes("finland") || label.includes("latvia") || label.includes("lithuania") || label.includes("luxembourg") || label.includes("malta") || label.includes("cyprus") || label.includes("united kingdom") || label.includes("norway")) {
+    return "national";
+  }
+  return "local";
+}
+
+function getLevelBadgeClass(levelLabel) {
+  const level = normalizeInstitutionLevel(levelLabel);
+  if (level === "european") {
+    return "bg-levels-european/15 text-levels-european border-levels-european/35";
+  }
+  if (level === "regional") {
+    return "bg-levels-regional/15 text-[#8a6411] border-levels-regional/45";
+  }
+  if (level === "national") {
+    return "bg-levels-national/15 text-levels-national border-levels-national/35";
+  }
+  return "bg-levels-local/15 text-levels-local border-levels-local/35";
 }
 
 function renderResultIntro() {
@@ -978,7 +1010,7 @@ function renderCompletionFunnel() {
     const copyBtn = document.createElement("button");
     copyBtn.type = "button";
     copyBtn.className =
-      "rounded-xl bg-civic-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-civic-600";
+      "rounded-xl bg-loop-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#184f8d]";
     copyBtn.textContent = "Copy to official platform";
     copyBtn.addEventListener("click", async () => {
       const textArea = document.getElementById("funnel-copy-text");
@@ -1027,7 +1059,7 @@ function renderCompletionFunnel() {
     const nextBtn = document.createElement("button");
     nextBtn.type = "button";
     nextBtn.className =
-      "rounded-xl bg-civic-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-civic-600";
+      "rounded-xl bg-loop-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#184f8d]";
     nextBtn.textContent = "Next";
     nextBtn.addEventListener("click", () => {
       state.funnelStep = 3;
@@ -1052,7 +1084,7 @@ function renderCompletionFunnel() {
   const seeBtn = document.createElement("button");
   seeBtn.type = "button";
   seeBtn.className =
-    "rounded-xl bg-civic-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-civic-600";
+    "rounded-xl bg-loop-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#184f8d]";
   seeBtn.textContent = "See my past submissions";
   seeBtn.addEventListener("click", () => {
     pastSubmissionsPanel.hidden = false;
@@ -1164,19 +1196,21 @@ function renderResults() {
 
   for (const project of state.matches) {
     const levelLabel = getProjectLevel(project, city);
+    const levelBadgeClass = getLevelBadgeClass(levelLabel);
     const card = document.createElement("button");
     card.type = "button";
     card.className =
-      "mb-2 w-full rounded-xl border border-slate-200 bg-white p-3 text-left transition hover:-translate-y-0.5 hover:border-cyan-300 hover:shadow-[0_6px_16px_rgba(10,55,79,0.1)]";
+      "mb-2 w-full rounded-xl border border-slate-300 bg-white p-3 text-left shadow-[0_1px_0_rgba(28,43,51,0.08)] transition hover:-translate-y-0.5 hover:border-loop-blue/70 hover:bg-loop-blue/5 hover:shadow-[0_8px_22px_rgba(31,95,168,0.18)]";
     const isActive = project.id === state.activeProjectId;
-    card.classList.toggle("border-civic-600", isActive);
+    card.classList.toggle("border-loop-blue", isActive);
+    card.classList.toggle("bg-loop-blue/10", isActive);
     card.classList.toggle("ring-2", isActive);
-    card.classList.toggle("ring-civic-600/20", isActive);
+    card.classList.toggle("ring-loop-blue/30", isActive);
     card.innerHTML = `
       <p class="m-0 font-semibold">${project.plainTitle}</p>
       <p class="my-1 text-sm text-slate-600">${project.institution}</p>
       <div class="mb-1">
-        <span class="inline-block rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">Level: ${levelLabel}</span>
+        <span class="inline-block rounded-full border px-2.5 py-0.5 text-xs font-semibold ${levelBadgeClass}">Level: ${levelLabel}</span>
       </div>
       <p class="mb-1 text-xs text-slate-500">${project.opinionCount.toLocaleString("en-US")} opinions submitted</p>
       <div class="mb-2 flex flex-wrap gap-1">
@@ -1297,7 +1331,7 @@ function renderDetail() {
       <div class="mt-3 rounded-lg border border-civic-200 bg-gradient-to-r from-civic-50 via-white to-amber-50 p-3">
         <div class="flex items-center justify-between gap-3">
           <p class="text-sm text-slate-700"><span class="font-semibold">Ideation Studio:</span> immersive chat space for improving your final draft.</p>
-          <button type="button" class="rounded-xl bg-civic-700 px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_16px_rgba(14,116,144,0.28)] transition hover:bg-civic-600 disabled:cursor-not-allowed disabled:opacity-50" id="open-ideation-modal" disabled>Open chat</button>
+          <button type="button" class="rounded-xl bg-loop-blue px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_16px_rgba(31,95,168,0.28)] transition hover:bg-[#184f8d] disabled:cursor-not-allowed disabled:opacity-50" id="open-ideation-modal" disabled>Open chat</button>
         </div>
         <p id="ideation-status" class="mt-2 text-xs text-slate-600">Select Agree or Disagree to start.</p>
       </div>
@@ -1323,7 +1357,7 @@ function renderDetail() {
         <div id="chat-thread" class="max-h-[45vh] space-y-2 overflow-y-auto rounded-lg border border-slate-200 bg-white p-3 text-sm"></div>
         <textarea id="opinion-input" class="mt-3 w-full rounded-xl border border-slate-300 p-3 text-sm outline-none ring-amber-300 placeholder:text-slate-400 focus:ring-4" placeholder="Type your view and press Send to chat..."></textarea>
         <div class="mt-2 flex flex-wrap justify-end gap-2">
-          <button type="button" class="rounded-xl bg-gradient-to-r from-civic-700 to-civic-600 px-4 py-2 text-sm font-semibold text-white" id="send-chat">Send to chat</button>
+          <button type="button" class="rounded-xl bg-loop-blue px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#184f8d]" id="send-chat">Send to chat</button>
         </div>
         <div id="send-decision" class="mt-3 hidden flex-wrap gap-2">
           <button type="button" id="decision-send" class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white">Send my opinion to the official platform</button>
