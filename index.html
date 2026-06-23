@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Your Voice in Public Consultations</title>
+    <title>Your Voice in Public Projects</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -40,33 +40,43 @@
     <main class="relative z-10 mx-auto max-w-6xl p-4 md:p-7" aria-live="polite">
       <header class="animate-[fadeIn_.45s_ease] px-1 py-4">
         <p class="mb-2 inline-block text-xs font-bold uppercase tracking-[0.08em] text-civic-700">Civic Participation Tool</p>
-        <h1 class="font-serif text-3xl leading-tight md:text-5xl">Your voice in public consultations</h1>
+        <h1 class="font-serif text-3xl leading-tight md:text-5xl">Find it, understand it, contribute on it</h1>
         <p class="mt-3 max-w-3xl text-sm text-slate-600 md:text-base">
-          Find open government consultations relevant to where you live and what
-          matters to you, then send your opinion and share with others.
+          Find open government projects relevant to where you live and what
+          matters to you, then draft your opinion and share it with others.
         </p>
       </header>
 
+      <section class="mb-4 rounded-2xl border border-amber-200 bg-amber-50/80 p-4 shadow-sm">
+        <p class="text-xs font-bold uppercase tracking-wide text-amber-900">Too many platforms. Too little clarity.</p>
+        <p class="mt-2 text-lg font-semibold text-amber-950">Europe has an estimated 5,000-10,000 public consultation platforms.</p>
+        <p class="mt-2 text-sm text-amber-900">
+          Your voice gets lost when opportunities are scattered across different websites,
+          legal language, and deadlines.
+        </p>
+        <p class="mt-2 text-sm font-medium text-civic-700">We match projects to your location and interests.</p>
+      </section>
+
       <section class="sticky top-2 z-20 my-4 grid grid-cols-3 gap-2" aria-label="Progress">
-        <div class="flex items-center gap-2 rounded-full border border-slate-300/90 bg-white/80 px-3 py-2 backdrop-blur" data-step-marker="1">
+        <div class="flex items-center gap-2 rounded-full border border-slate-300/90 bg-white/80 px-3 py-2 backdrop-blur" data-step-marker="1" role="button" tabindex="0" aria-controls="step-1">
           <span class="inline-grid h-6 w-6 place-items-center rounded-full border border-slate-300 text-xs font-bold" data-step-dot="1">1</span>
           <p class="text-sm text-slate-600">Location</p>
         </div>
-        <div class="flex items-center gap-2 rounded-full border border-slate-300/90 bg-white/80 px-3 py-2 backdrop-blur" data-step-marker="2">
+        <div class="flex items-center gap-2 rounded-full border border-slate-300/90 bg-white/80 px-3 py-2 backdrop-blur" data-step-marker="2" role="button" tabindex="0" aria-controls="step-2">
           <span class="inline-grid h-6 w-6 place-items-center rounded-full border border-slate-300 text-xs font-bold" data-step-dot="2">2</span>
           <p class="text-sm text-slate-600">Topics</p>
         </div>
-        <div class="flex items-center gap-2 rounded-full border border-slate-300/90 bg-white/80 px-3 py-2 backdrop-blur" data-step-marker="3">
+        <div class="flex items-center gap-2 rounded-full border border-slate-300/90 bg-white/80 px-3 py-2 backdrop-blur" data-step-marker="3" role="button" tabindex="0" aria-controls="step-3">
           <span class="inline-grid h-6 w-6 place-items-center rounded-full border border-slate-300 text-xs font-bold" data-step-dot="3">3</span>
-          <p class="text-sm text-slate-600">Consultations</p>
+          <p class="text-sm text-slate-600">Projects</p>
         </div>
       </section>
 
       <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_12px_30px_rgba(9,30,45,0.12)] md:p-5" id="step-1" data-step="1">
         <h2 class="text-xl font-semibold md:text-2xl">Step 1 of 3 - Where do you live?</h2>
         <p class="mb-4 mt-2 text-sm text-slate-600 md:text-base">
-          Governments at city, regional, national, and European levels want to
-          hear from you. We will match consultations open right now.
+          Governments at local, regional, national, and European levels want to
+          hear from you. We will match projects open right now.
         </p>
 
         <div class="mb-4">
@@ -75,7 +85,7 @@
             id="city-search"
             class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-amber-300 placeholder:text-slate-400 focus:ring-4"
             type="search"
-            placeholder="Type a city or region"
+            placeholder="Type a country, city, or region"
             autocomplete="off"
           />
           <p id="city-search-empty" class="mt-2 text-sm text-slate-600" hidden>
@@ -83,22 +93,38 @@
           </p>
         </div>
 
-        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" id="city-grid" role="radiogroup" aria-label="Cities"></div>
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" id="city-grid" role="radiogroup" aria-label="Locations"></div>
 
         <div class="mt-4 flex justify-end">
           <button class="rounded-xl bg-gradient-to-r from-civic-700 to-civic-600 px-4 py-2 font-semibold text-white" id="to-step-2" type="button">
             Continue to topics
           </button>
         </div>
-        <p class="mt-2 text-sm text-rose-700" id="step-1-error" hidden>Please select a city to continue.</p>
+        <p class="mt-2 text-sm text-rose-700" id="step-1-error" hidden>Please select a location to continue.</p>
       </section>
 
       <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_12px_30px_rgba(9,30,45,0.12)] md:p-5" id="step-2" data-step="2" hidden>
         <h2 class="text-xl font-semibold md:text-2xl">Step 2 of 3 - What do you care about?</h2>
         <p class="mb-4 mt-2 text-sm text-slate-600 md:text-base">
-          Pick one or more topics that matter to you. You will only see relevant
-          consultations.
+          Pick one or more topics that matter to you. You will only see relevant projects.
         </p>
+
+        <div class="mb-4 rounded-xl border border-civic-200 bg-civic-50 p-3">
+          <p class="text-sm font-medium text-civic-700">Need inspiration?</p>
+          <div class="mt-3 flex flex-col items-center text-center">
+            <div class="relative h-44 w-44">
+              <div class="absolute left-1/2 top-0 z-10 h-0 w-0 -translate-x-1/2 border-l-[10px] border-r-[10px] border-b-[16px] border-l-transparent border-r-transparent border-b-civic-700"></div>
+              <div id="topic-wheel" class="h-44 w-44 rounded-full border-4 border-white shadow transition-transform duration-[2200ms] ease-out"></div>
+              <div class="pointer-events-none absolute inset-0 grid place-items-center">
+                <div class="rounded-full bg-white/90 px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-civic-700">Spin</div>
+              </div>
+            </div>
+            <div class="mt-3">
+              <button class="rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2 text-sm font-semibold text-white" id="random-topic" type="button">Spin random topic wheel</button>
+              <p class="mt-2 text-sm text-slate-600" id="random-topic-result">Spin the wheel to discover a topic.</p>
+            </div>
+          </div>
+        </div>
 
         <div class="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" id="topic-grid" role="group" aria-label="Topics"></div>
 
@@ -107,31 +133,37 @@
         <div class="mt-4 flex items-center justify-between gap-2">
           <button class="rounded-xl border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700" id="back-to-1" type="button">Back</button>
           <button class="rounded-xl bg-gradient-to-r from-civic-700 to-civic-600 px-4 py-2 font-semibold text-white" id="to-step-3" type="button">
-            Show my consultations
+            Show my projects
           </button>
         </div>
         <p class="mt-2 text-sm text-rose-700" id="step-2-error" hidden>Select at least one topic to continue.</p>
       </section>
 
       <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-[0_12px_30px_rgba(9,30,45,0.12)] md:p-5" id="step-3" data-step="3" hidden>
-        <h2 class="text-xl font-semibold md:text-2xl">Step 3 of 3 - Consultations for you</h2>
+        <h2 class="text-xl font-semibold md:text-2xl">Step 3 of 3 - Projects for you</h2>
         <p class="mb-4 mt-2 text-sm text-slate-600 md:text-base" id="result-intro"></p>
 
         <div class="grid gap-3 lg:grid-cols-[minmax(280px,0.95fr)_1.7fr]">
-          <aside class="rounded-xl border border-slate-200 bg-white p-4" aria-label="Consultation results">
-            <h3 class="mb-3 text-base font-semibold">Matching consultations</h3>
+          <aside class="rounded-xl border border-slate-200 bg-white p-4" aria-label="Project results">
+            <h3 class="mb-3 text-base font-semibold">Matching projects</h3>
             <div id="consultation-list"></div>
             <p id="empty-state" class="text-sm text-slate-600" hidden>
-              No consultations match your filters yet. Try adding more topics.
+              No projects match your filters yet. Try adding more topics.
             </p>
           </aside>
 
-          <article class="rounded-xl border border-slate-200 bg-white p-4" id="consultation-detail" aria-label="Consultation details">
+          <article class="rounded-xl border border-slate-200 bg-white p-4" id="consultation-detail" aria-label="Project details">
             <p class="text-sm text-slate-600">
-              Select a consultation to read a summary, key points, and share it.
+              Select a project to read a summary, view opinions, and draft your response.
             </p>
           </article>
         </div>
+
+        <section id="past-submissions" class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4" hidden>
+          <h3 class="text-base font-semibold">Your past submissions</h3>
+          <p class="mt-1 text-sm text-slate-600">You voted on these projects recently. Follow updates and next deadlines.</p>
+          <div class="mt-3 grid gap-2" id="past-submissions-list"></div>
+        </section>
 
         <div class="mt-4 flex items-center justify-between gap-2">
           <button class="rounded-xl border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700" id="back-to-2" type="button">Back</button>
