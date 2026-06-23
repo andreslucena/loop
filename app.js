@@ -749,6 +749,9 @@ function renderTopics() {
       "rounded-full border border-slate-400 bg-slate-50 px-3 py-2 text-left text-sm text-slate-800 shadow-[0_1px_0_rgba(28,43,51,0.07)] transition hover:-translate-y-0.5 hover:border-loop-blue/70 hover:bg-loop-blue/5 hover:shadow-[0_6px_16px_rgba(31,95,168,0.18)]";
     chip.innerHTML = `<span class="mr-1.5">${topicMeta[topic].icon}</span>${topic}`;
     const active = state.topics.has(topic);
+    chip.classList.toggle("border-slate-400", !active);
+    chip.classList.toggle("bg-slate-50", !active);
+    chip.classList.toggle("text-slate-800", !active);
     chip.classList.toggle("border-loop-blue", active);
     chip.classList.toggle("bg-loop-blue/10", active);
     chip.classList.toggle("text-loop-ink", active);
