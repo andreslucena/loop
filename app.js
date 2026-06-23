@@ -1284,16 +1284,15 @@ function createShareLink(network, project) {
 
 function getMockAssistantReply(project, stance, userText, assistantTurn) {
   const topic = (project.topics[0] || "public impact").toLowerCase();
-  const direction = stance === "agree" ? "support" : "concerns about";
   const stancePhrase =
     stance === "agree"
-      ? "I support the proposal, but I want stronger guarantees"
-      : "I have concerns about the proposal and I want concrete safeguards";
+      ? "I support the proposal, and I want stronger social and environmental guarantees"
+      : "I have concerns about the proposal, and I want fairer safeguards for residents";
   const sequence = [
-    `Great starting point. I can already see your intention clearly. Let's transform your idea into a civic comment that is persuasive, respectful, and specific. Since this project focuses on ${topic}, we should highlight real local impact, explain why this matters now, and ask for concrete commitments that institutions can act on.`,
-    `Here is a first draft you can improve:\n\n"${stancePhrase}. This project directly affects people in my area, especially in relation to ${topic}. I ask the institution to publish a clear implementation timeline, share progress reports in plain language, and define measurable indicators so residents can verify whether the policy is working."\n\nTell me what sounds too strong, too weak, or too generic, and I will refine it with your tone.`,
-    "Strong direction. To make your submission more convincing, add one short lived example from your city or neighborhood and one expected outcome. Decision-makers respond better when feedback includes context plus a practical request. We can now make the text feel both personal and actionable.",
-    `Here is version 2 with stronger structure:\n\n"${stancePhrase}. In my community, this issue already affects daily life through delays, uncertainty, and unequal access. I ask for three concrete improvements: (1) a public timeline with milestones, (2) transparent progress updates every quarter, and (3) citizen-facing summaries in plain language so non-experts can follow implementation."\n\nIf you want, I can make this shorter, more formal, or more community-centered.`,
+    `Great starting point. Your intention is clear. Let's turn it into a civic comment that is constructive, inclusive, and specific. Since this project focuses on ${topic}, we can emphasize everyday impact, social fairness, and practical improvements institutions can deliver.`,
+    `Here is a first draft you can improve:\n\n"${stancePhrase}. This project affects daily life in my area, especially in relation to ${topic}. I ask the institution to co-design implementation with residents, publish a clear timeline, and report progress in plain language with indicators people can understand."\n\nTell me what sounds too strong, too weak, or too generic, and I will adapt it to your voice.`,
+    "Great direction. To strengthen your message, add one concrete example from your neighborhood and one positive outcome you want to see. Public officials respond better when feedback combines lived experience with a realistic solution.",
+    `Here is version 2 with a stronger progressive framing:\n\n"${stancePhrase}. In my community, this issue affects access, affordability, and quality of life. I ask for three concrete improvements: (1) a public timeline with milestones, (2) transparent quarterly updates with open data, and (3) targeted measures that prioritize people most impacted, including low-income residents, young people, and older adults."\n\nIf you want, I can make this shorter, more formal, or more community-centered.`,
     "Final polish suggestion: keep your final draft concise, constructive, and specific. End with one direct sentence on what success looks like in 6-12 months. That closing line helps officials evaluate your recommendation and increases the chance of meaningful follow-up.",
   ];
 
