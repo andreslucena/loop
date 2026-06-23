@@ -1004,6 +1004,11 @@ function renderCompletionFunnel() {
 
   if (step === 1) {
     const latestOpinion = getLatestSubmission()?.submittedOpinion || "";
+    const latestSubmission = getLatestSubmission();
+    const officialProject =
+      state.matches.find((item) => item.id === state.activeProjectId) ||
+      projects.find((item) => item.id === latestSubmission?.projectId) ||
+      null;
     funnelStepContent.innerHTML =
       `<p class="text-sm text-slate-700">Copy your final opinion and paste it into the official platform submission form.</p>
       <textarea id="funnel-copy-text" class="mt-2 w-full rounded-xl border border-civic-200 bg-white p-3 text-sm text-slate-700" rows="6" readonly>${latestOpinion}</textarea>`;
@@ -1024,6 +1029,9 @@ function renderCompletionFunnel() {
             textArea.select();
           }
         }
+      }
+      if (officialProject?.officialUrl) {
+        window.open(officialProject.officialUrl, "_blank", "noopener,noreferrer");
       }
       state.funnelStep = 2;
       renderCompletionFunnel();
