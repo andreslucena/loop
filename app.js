@@ -6,6 +6,9 @@ const state = {
   activeProjectId: null,
   userSubmissions: [],
   wheelRotation: 0,
+  funnelStep: 1,
+  selectedSubmissionId: null,
+  pendingBadgeCelebration: false,
 };
 
 const cities = [
@@ -13,7 +16,61 @@ const cities = [
   { id: "porto", name: "Porto", levels: ["Norte", "Portugal", "European Union"] },
   { id: "krakow", name: "Krakow", levels: ["Lesser Poland", "Poland", "European Union"] },
   { id: "bologna", name: "Bologna", levels: ["Emilia-Romagna", "Italy", "European Union"] },
+  { id: "barcelona", name: "Barcelona", levels: ["Catalonia", "Spain", "European Union"] },
+  { id: "madrid", name: "Madrid", levels: ["Community of Madrid", "Spain", "European Union"] },
+  { id: "paris", name: "Paris", levels: ["Ile-de-France", "France", "European Union"] },
+  { id: "berlin", name: "Berlin", levels: ["Berlin", "Germany", "European Union"] },
+  { id: "hamburg", name: "Hamburg", levels: ["Hamburg", "Germany", "European Union"] },
+  { id: "munich", name: "Munich", levels: ["Bavaria", "Germany", "European Union"] },
+  { id: "rome", name: "Rome", levels: ["Lazio", "Italy", "European Union"] },
+  { id: "milan", name: "Milan", levels: ["Lombardy", "Italy", "European Union"] },
+  { id: "naples", name: "Naples", levels: ["Campania", "Italy", "European Union"] },
+  { id: "lisbon", name: "Lisbon", levels: ["Lisbon", "Portugal", "European Union"] },
+  { id: "athens", name: "Athens", levels: ["Attica", "Greece", "European Union"] },
+  { id: "thessaloniki", name: "Thessaloniki", levels: ["Central Macedonia", "Greece", "European Union"] },
+  { id: "brussels", name: "Brussels", levels: ["Brussels-Capital Region", "Belgium", "European Union"] },
+  { id: "antwerp", name: "Antwerp", levels: ["Flanders", "Belgium", "European Union"] },
+  { id: "amsterdam", name: "Amsterdam", levels: ["North Holland", "Netherlands", "European Union"] },
+  { id: "rotterdam", name: "Rotterdam", levels: ["South Holland", "Netherlands", "European Union"] },
+  { id: "the-hague", name: "The Hague", levels: ["South Holland", "Netherlands", "European Union"] },
+  { id: "vienna", name: "Vienna", levels: ["Vienna", "Austria", "European Union"] },
+  { id: "prague", name: "Prague", levels: ["Prague", "Czech Republic", "European Union"] },
+  { id: "brno", name: "Brno", levels: ["South Moravian", "Czech Republic", "European Union"] },
+  { id: "warsaw", name: "Warsaw", levels: ["Mazovia", "Poland", "European Union"] },
+  { id: "gdansk", name: "Gdansk", levels: ["Pomeranian", "Poland", "European Union"] },
+  { id: "wroclaw", name: "Wroclaw", levels: ["Lower Silesian", "Poland", "European Union"] },
+  { id: "budapest", name: "Budapest", levels: ["Central Hungary", "Hungary", "European Union"] },
+  { id: "bucharest", name: "Bucharest", levels: ["Bucharest-Ilfov", "Romania", "European Union"] },
+  { id: "cluj-napoca", name: "Cluj-Napoca", levels: ["Cluj", "Romania", "European Union"] },
+  { id: "sofia", name: "Sofia", levels: ["Sofia City", "Bulgaria", "European Union"] },
+  { id: "plovdiv", name: "Plovdiv", levels: ["Plovdiv", "Bulgaria", "European Union"] },
+  { id: "zagreb", name: "Zagreb", levels: ["City of Zagreb", "Croatia", "European Union"] },
+  { id: "ljubljana", name: "Ljubljana", levels: ["Central Slovenia", "Slovenia", "European Union"] },
+  { id: "bratislava", name: "Bratislava", levels: ["Bratislava", "Slovakia", "European Union"] },
+  { id: "dublin", name: "Dublin", levels: ["Leinster", "Ireland", "European Union"] },
+  { id: "cork", name: "Cork", levels: ["Munster", "Ireland", "European Union"] },
+  { id: "london", name: "London", levels: ["Greater London", "United Kingdom"] },
+  { id: "manchester", name: "Manchester", levels: ["North West", "United Kingdom"] },
+  { id: "edinburgh", name: "Edinburgh", levels: ["Scotland", "United Kingdom"] },
+  { id: "glasgow", name: "Glasgow", levels: ["Scotland", "United Kingdom"] },
+  { id: "copenhagen", name: "Copenhagen", levels: ["Capital Region", "Denmark", "European Union"] },
+  { id: "aarhus", name: "Aarhus", levels: ["Central Denmark", "Denmark", "European Union"] },
+  { id: "stockholm", name: "Stockholm", levels: ["Stockholm County", "Sweden", "European Union"] },
+  { id: "gothenburg", name: "Gothenburg", levels: ["Vastra Gotaland", "Sweden", "European Union"] },
+  { id: "oslo", name: "Oslo", levels: ["Oslo", "Norway"] },
+  { id: "bergen", name: "Bergen", levels: ["Vestland", "Norway"] },
+  { id: "helsinki", name: "Helsinki", levels: ["Uusimaa", "Finland", "European Union"] },
+  { id: "tampere", name: "Tampere", levels: ["Pirkanmaa", "Finland", "European Union"] },
+  { id: "riga", name: "Riga", levels: ["Riga", "Latvia", "European Union"] },
+  { id: "vilnius", name: "Vilnius", levels: ["Vilnius County", "Lithuania", "European Union"] },
+  { id: "tallinn", name: "Tallinn", levels: ["Harju", "Estonia", "European Union"] },
+  { id: "luxembourg-city", name: "Luxembourg City", levels: ["Luxembourg", "Luxembourg", "European Union"] },
+  { id: "valletta", name: "Valletta", levels: ["South Eastern", "Malta", "European Union"] },
+  { id: "nicosia", name: "Nicosia", levels: ["Nicosia", "Cyprus", "European Union"] },
 ];
+
+const FEATURED_CITY_IDS = ["estonia", "porto", "krakow", "bologna"];
+const MAX_CITY_CARDS = 12;
 
 const topicMeta = {
   Housing: { icon: "🏠" },
@@ -203,6 +260,116 @@ const projects = [
   },
 ];
 
+const seededSubmissions = [
+  {
+    id: "seed-1",
+    projectId: "eu-ai-liability",
+    projectTitle: "Should AI companies be responsible for harmful AI decisions?",
+    stance: "agree",
+    submittedAt: "2 weeks ago",
+    status: "Under review",
+    update: "EU consultation team published first response summary.",
+    submittedOpinion:
+      "I support stronger accountability for high-risk AI. Citizens should have clear complaint channels and plain-language explanations when decisions affect work, healthcare, or housing.",
+    opinionsFromOthers: [
+      "Need clear deadlines for company responses.",
+      "Please include stronger rights for workers impacted by automated decisions.",
+    ],
+  },
+  {
+    id: "seed-2",
+    projectId: "porto-river-mobility",
+    projectTitle: "How should Porto improve riverfront transport and public space?",
+    stance: "agree",
+    submittedAt: "1 month ago",
+    status: "Accepted",
+    update: "Municipality included pedestrian crossing improvements in draft v2.",
+    submittedOpinion:
+      "I support bus-priority lanes if crossings and bike safety are implemented first in high-footfall zones.",
+    opinionsFromOthers: [
+      "Keep loading access windows for shops.",
+      "Bus priority should include accessibility upgrades at stations.",
+    ],
+  },
+  {
+    id: "seed-3",
+    projectId: "krakow-clean-heat",
+    projectTitle: "What should Krakow prioritize to reduce winter air pollution?",
+    stance: "disagree",
+    submittedAt: "3 weeks ago",
+    status: "Pending",
+    update: "No municipal update yet.",
+    submittedOpinion:
+      "The subsidy model should include tenants, not just homeowners, or inequality will increase.",
+    opinionsFromOthers: [
+      "Expand school-zone monitors first.",
+      "Need clearer enforcement milestones by district.",
+    ],
+  },
+  {
+    id: "seed-4",
+    projectId: "bologna-affordable-rent",
+    projectTitle: "How should Bologna protect residents from rising rents?",
+    stance: "agree",
+    submittedAt: "6 days ago",
+    status: "Under review",
+    update: "City opened second round with additional tenant-protection options.",
+    submittedOpinion:
+      "I support rent pressure zones, but legal aid and transparent enforcement are essential to make policy effective.",
+    opinionsFromOthers: [
+      "Need student-specific protection measures.",
+      "Long-term lease incentives are useful if accountability is strong.",
+    ],
+  },
+  {
+    id: "seed-5",
+    projectId: "eu-grid-flex",
+    projectTitle: "Should households be paid for flexible clean energy use?",
+    stance: "agree",
+    submittedAt: "4 days ago",
+    status: "Pending",
+    update: "Draft impact note expected next month.",
+    submittedOpinion:
+      "Households should be compensated fairly, and pricing rules must be understandable for non-experts.",
+    opinionsFromOthers: [
+      "Billing dashboards need plain-language explanations.",
+      "Protect low-income households from pricing volatility.",
+    ],
+  },
+  {
+    id: "seed-6",
+    projectId: "eu-migrant-services",
+    projectTitle: "What support should newcomers receive in their first year?",
+    stance: "agree",
+    submittedAt: "Yesterday",
+    status: "Under review",
+    update: "Community organizations invited to implementation workshop.",
+    submittedOpinion:
+      "I support minimum service standards, especially legal orientation and mental health support in the first months.",
+    opinionsFromOthers: [
+      "Language classes should start in week one.",
+      "Include school support for families with children.",
+    ],
+  },
+];
+
+const badges = [
+  {
+    id: "first-submission",
+    name: "First Voice",
+    description: "Unlocked after your first submission",
+    threshold: 1,
+    icon: "🥇",
+  },
+  {
+    id: "three-submissions",
+    name: "Civic Contributor",
+    description: "Unlocked after 3 submissions",
+    threshold: 3,
+    icon: "🏅",
+  },
+];
+
 const socialMeta = {
   WhatsApp: {
     chipClass: "border-transparent bg-[#25D366] text-white shadow-[0_8px_18px_rgba(37,211,102,0.35)]",
@@ -228,8 +395,10 @@ const socialMeta = {
 
 const cityGrid = document.getElementById("city-grid");
 const citySearchInput = document.getElementById("city-search");
+const locationSuggestions = document.getElementById("location-suggestions");
 const citySearchEmpty = document.getElementById("city-search-empty");
 const topicGrid = document.getElementById("topic-grid");
+const progressTabs = document.querySelector('section[aria-label="Progress"]');
 const resultIntro = document.getElementById("result-intro");
 const projectList = document.getElementById("consultation-list");
 const projectDetail = document.getElementById("consultation-detail");
@@ -238,8 +407,19 @@ const selectionHint = document.getElementById("selection-hint");
 const randomTopicButton = document.getElementById("random-topic");
 const randomTopicResult = document.getElementById("random-topic-result");
 const topicWheel = document.getElementById("topic-wheel");
+const badgePanel = document.getElementById("badge-panel");
+const badgeList = document.getElementById("badge-list");
+const badgeProgressText = document.getElementById("badge-progress-text");
+const completionFunnel = document.getElementById("completion-funnel");
+const funnelStepLabel = document.getElementById("funnel-step-label");
+const funnelProgressBar = document.getElementById("funnel-progress-bar");
+const funnelStepContent = document.getElementById("funnel-step-content");
+const funnelActions = document.getElementById("funnel-actions");
 const pastSubmissionsPanel = document.getElementById("past-submissions");
 const pastSubmissionsList = document.getElementById("past-submissions-list");
+const submissionDetailView = document.getElementById("submission-detail-view");
+const submissionDetailContent = document.getElementById("submission-detail-content");
+const backToSubmissionsButton = document.getElementById("back-to-submissions");
 
 const step1Error = document.getElementById("step-1-error");
 const step2Error = document.getElementById("step-2-error");
@@ -250,10 +430,12 @@ document.getElementById("to-step-2").addEventListener("click", () => {
     return;
   }
   step1Error.hidden = true;
-  setStep(2);
+  setStep(2, { scrollToProgress: true });
 });
 
-document.getElementById("back-to-1").addEventListener("click", () => setStep(1));
+document.getElementById("back-to-1").addEventListener("click", () =>
+  setStep(1, { scrollToProgress: true })
+);
 
 document.getElementById("to-step-3").addEventListener("click", () => {
   if (!state.topics.size) {
@@ -262,13 +444,27 @@ document.getElementById("to-step-3").addEventListener("click", () => {
   }
   step2Error.hidden = true;
   applyFilters();
-  setStep(3);
+  setStep(3, { scrollToProgress: true });
 });
 
-document.getElementById("back-to-2").addEventListener("click", () => setStep(2));
+document.getElementById("back-to-2").addEventListener("click", () =>
+  setStep(2, { scrollToProgress: true })
+);
 
 citySearchInput.addEventListener("input", () => {
   renderCities(citySearchInput.value);
+});
+
+citySearchInput.addEventListener("change", () => {
+  trySelectCityFromSearch(citySearchInput.value);
+});
+
+citySearchInput.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") {
+    return;
+  }
+  event.preventDefault();
+  trySelectCityFromSearch(citySearchInput.value);
 });
 
 randomTopicButton.addEventListener("click", spinRandomTopic);
@@ -280,7 +476,7 @@ for (const marker of document.querySelectorAll("[data-step-marker]")) {
     if (targetStep === 3 && state.cityId && state.topics.size) {
       applyFilters();
     }
-    setStep(targetStep);
+    setStep(targetStep, { scrollToProgress: true });
   });
 
   marker.addEventListener("keydown", (event) => {
@@ -292,16 +488,21 @@ for (const marker of document.querySelectorAll("[data-step-marker]")) {
     if (targetStep === 3 && state.cityId && state.topics.size) {
       applyFilters();
     }
-    setStep(targetStep);
+    setStep(targetStep, { scrollToProgress: true });
   });
 }
+
+backToSubmissionsButton.addEventListener("click", () => {
+  state.selectedSubmissionId = null;
+  renderPastSubmissions();
+});
 
 function handleBrowserNavigation() {
   const requestedStep = parseStepFromLocation();
   if (requestedStep === 3 && state.cityId && state.topics.size) {
     applyFilters();
   }
-  setStep(requestedStep, { historyMode: "none" });
+  setStep(requestedStep, { historyMode: "none", scrollToProgress: true });
 }
 
 window.addEventListener("hashchange", handleBrowserNavigation);
@@ -338,6 +539,14 @@ function syncHistory(step, mode = "push") {
   }
 }
 
+function scrollToProgressTabs() {
+  if (!progressTabs) {
+    return;
+  }
+  const targetTop = progressTabs.getBoundingClientRect().top + window.scrollY - 12;
+  window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
+}
+
 function initializeStepPanels() {
   for (const panel of document.querySelectorAll("[data-step]")) {
     panel.classList.add("transition-all", "duration-300", "ease-out");
@@ -353,6 +562,7 @@ function initializeStepPanels() {
 
 function setStep(step, options = {}) {
   const historyMode = options.historyMode ?? "push";
+  const shouldScrollToProgress = options.scrollToProgress ?? false;
   const targetStep = normalizeStepForState(step);
   const panels = [...document.querySelectorAll("[data-step]")];
   const nextPanel = panels.find((panel) => Number(panel.dataset.step) === targetStep);
@@ -409,20 +619,38 @@ function setStep(step, options = {}) {
   if (historyMode !== "none") {
     syncHistory(targetStep, historyMode);
   }
+
+  if (shouldScrollToProgress) {
+    scrollToProgressTabs();
+  }
 }
 
 function renderCities(query = "") {
   cityGrid.innerHTML = "";
   const normalized = query.trim().toLowerCase();
-  const filteredCities = cities.filter((city) => {
+  const featuredCities = FEATURED_CITY_IDS.map((id) => cities.find((city) => city.id === id)).filter(Boolean);
+  let filteredCities = cities.filter((city) => {
     if (!normalized) {
-      return true;
+      return false;
     }
     return (
       city.name.toLowerCase().includes(normalized) ||
       city.levels.some((level) => level.toLowerCase().includes(normalized))
     );
   });
+
+  if (!normalized) {
+    filteredCities = [...featuredCities];
+  }
+
+  if (state.cityId && !filteredCities.some((city) => city.id === state.cityId)) {
+    const selectedCity = cities.find((city) => city.id === state.cityId);
+    if (selectedCity) {
+      filteredCities.unshift(selectedCity);
+    }
+  }
+
+  filteredCities = filteredCities.slice(0, MAX_CITY_CARDS);
 
   citySearchEmpty.hidden = filteredCities.length > 0;
 
@@ -452,6 +680,44 @@ function renderCities(query = "") {
     });
     cityGrid.appendChild(button);
   }
+}
+
+function trySelectCityFromSearch(rawValue) {
+  const query = rawValue.trim().toLowerCase();
+  if (!query) {
+    return;
+  }
+
+  const matchedCity = cities.find((city) => city.name.toLowerCase() === query);
+  if (!matchedCity) {
+    renderCities(rawValue);
+    return;
+  }
+
+  state.cityId = matchedCity.id;
+  step1Error.hidden = true;
+  citySearchInput.value = matchedCity.name;
+  renderCities(matchedCity.name);
+  renderResultIntro();
+}
+
+function renderLocationSuggestions() {
+  if (!locationSuggestions) {
+    return;
+  }
+
+  const suggestionValues = new Set();
+  for (const city of cities) {
+    suggestionValues.add(city.name);
+    for (const level of city.levels) {
+      suggestionValues.add(level);
+    }
+  }
+
+  locationSuggestions.innerHTML = [...suggestionValues]
+    .sort((a, b) => a.localeCompare(b))
+    .map((value) => `<option value="${value}"></option>`)
+    .join("");
 }
 
 function renderTopics() {
@@ -583,9 +849,308 @@ function renderResultIntro() {
   resultIntro.textContent = `Based on your interests in ${topics.join(", ")} - covering governments from ${city.name} to ${city.levels[city.levels.length - 1]}.`;
 }
 
+function getAllSubmissions() {
+  return [...state.userSubmissions, ...seededSubmissions];
+}
+
+function getLatestSubmission() {
+  return state.userSubmissions[0] || seededSubmissions[0] || null;
+}
+
+function getBadgeProgress() {
+  const count = state.userSubmissions.length;
+  return {
+    count,
+    firstUnlocked: count >= 1,
+    thirdUnlocked: count >= 3,
+    remainingToThird: Math.max(0, 3 - count),
+  };
+}
+
+function renderBadges() {
+  if (!badgeList || !badgeProgressText) {
+    return;
+  }
+
+  const progress = getBadgeProgress();
+  badgeProgressText.textContent =
+    progress.count === 0
+      ? "Make your first submission to unlock your first badge."
+      : progress.remainingToThird > 0
+        ? `Great start. You have ${progress.count}/3 submissions toward your next badge.`
+        : "Amazing. You unlocked both participation badges.";
+
+  badgeList.innerHTML = badges
+    .map((badge) => {
+      const unlocked = progress.count >= badge.threshold;
+      return `<article class="relative overflow-hidden rounded-xl border p-3 ${
+        unlocked
+          ? "border-amber-300 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-100 shadow-[0_14px_28px_rgba(251,146,60,0.28)]"
+          : "border-slate-200 bg-gradient-to-br from-slate-100 to-slate-50"
+      }" data-badge-card="${badge.id}" data-badge-unlocked="${unlocked}">
+        <div class="pointer-events-none absolute inset-x-0 top-0 h-8 ${
+          unlocked ? "bg-gradient-to-r from-transparent via-white/70 to-transparent animate-pulse" : "hidden"
+        }"></div>
+        <div class="relative flex items-start gap-3">
+          <div class="mt-0.5 inline-flex h-10 w-10 items-center justify-center rounded-full border ${
+            unlocked
+              ? "border-amber-300 bg-gradient-to-br from-yellow-200 to-amber-400 text-lg shadow-[0_6px_14px_rgba(245,158,11,0.35)]"
+              : "border-slate-300 bg-white text-base"
+          }">${badge.icon}</div>
+          <div class="min-w-0">
+            <p class="text-sm font-semibold ${unlocked ? "text-amber-900" : "text-slate-600"}">${badge.name}</p>
+            <p class="mt-1 text-xs ${unlocked ? "text-amber-800" : "text-slate-500"}">${badge.description}</p>
+            <p class="mt-2 inline-block rounded-full px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${
+              unlocked ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-600"
+            }">${unlocked ? "Unlocked" : "Locked"}</p>
+          </div>
+        </div>
+      </article>`;
+    })
+    .join("");
+}
+
+function triggerBadgeCelebration() {
+  if (!badgePanel) {
+    return;
+  }
+
+  const unlockedCards = [...badgeList.querySelectorAll('[data-badge-unlocked="true"]')];
+  if (!unlockedCards.length) {
+    return;
+  }
+
+  badgePanel.classList.add("ring-2", "ring-amber-300", "shadow-[0_18px_36px_rgba(251,146,60,0.3)]");
+  unlockedCards.forEach((card) => {
+    card.classList.add("animate-bounce", "scale-[1.02]");
+  });
+
+  const sparkleLayer = document.createElement("div");
+  sparkleLayer.className = "pointer-events-none absolute inset-0 overflow-hidden";
+  for (let index = 0; index < 8; index += 1) {
+    const sparkle = document.createElement("span");
+    sparkle.textContent = index % 2 === 0 ? "✨" : "⭐";
+    sparkle.className = "absolute text-base opacity-0";
+    sparkle.style.left = `${8 + index * 11}%`;
+    sparkle.style.top = `${12 + (index % 3) * 18}%`;
+    sparkle.style.transition = "transform 700ms ease, opacity 700ms ease";
+    sparkleLayer.appendChild(sparkle);
+
+    window.requestAnimationFrame(() => {
+      sparkle.style.opacity = "1";
+      sparkle.style.transform = "translateY(-12px) scale(1.15)";
+    });
+  }
+
+  badgePanel.classList.add("relative", "overflow-hidden");
+  badgePanel.appendChild(sparkleLayer);
+
+  window.setTimeout(() => {
+    badgePanel.classList.remove("ring-2", "ring-amber-300", "shadow-[0_18px_36px_rgba(251,146,60,0.3)]");
+    unlockedCards.forEach((card) => {
+      card.classList.remove("animate-bounce", "scale-[1.02]");
+    });
+    sparkleLayer.remove();
+  }, 1200);
+}
+
+function renderCompletionFunnel() {
+  if (!completionFunnel || !funnelStepLabel || !funnelProgressBar || !funnelStepContent || !funnelActions) {
+    return;
+  }
+
+  if (!state.userSubmissions.length) {
+    completionFunnel.hidden = true;
+    return;
+  }
+
+  completionFunnel.hidden = false;
+  const step = state.funnelStep;
+  funnelStepLabel.textContent = `Step ${step} of 3`;
+  funnelProgressBar.style.width = `${(step / 3) * 100}%`;
+  funnelActions.innerHTML = "";
+
+  if (step === 1) {
+    const latestOpinion = getLatestSubmission()?.submittedOpinion || "";
+    funnelStepContent.innerHTML =
+      `<p class="text-sm text-slate-700">Copy your final opinion and paste it into the official platform submission form.</p>
+      <textarea id="funnel-copy-text" class="mt-2 w-full rounded-xl border border-civic-200 bg-white p-3 text-sm text-slate-700" rows="6" readonly>${latestOpinion}</textarea>`;
+    const copyBtn = document.createElement("button");
+    copyBtn.type = "button";
+    copyBtn.className =
+      "rounded-xl bg-civic-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-civic-600";
+    copyBtn.textContent = "Copy to official platform";
+    copyBtn.addEventListener("click", async () => {
+      const textArea = document.getElementById("funnel-copy-text");
+      const text = textArea?.value?.trim() || "";
+      if (text) {
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (_error) {
+          if (textArea) {
+            textArea.focus();
+            textArea.select();
+          }
+        }
+      }
+      state.funnelStep = 2;
+      renderCompletionFunnel();
+    });
+    funnelActions.appendChild(copyBtn);
+    return;
+  }
+
+  if (step === 2) {
+    funnelStepContent.innerHTML =
+      '<p class="text-sm text-slate-700">Share your contribution with others to encourage more participation.</p><p class="mt-1 text-xs text-slate-600">You can skip this step and continue.</p><div class="mt-2 flex flex-wrap gap-2">' +
+      Object.keys(socialMeta)
+        .map(
+          (network) =>
+            `<a class="inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs transition hover:-translate-y-0.5 hover:scale-[1.02] ${socialMeta[network].chipClass}" href="#" data-funnel-share="${network}"><span class="inline-flex items-center justify-center rounded-full bg-white p-1 ${socialMeta[network].iconClass}">${socialMeta[network].svg}</span><span class="font-semibold">${network}</span></a>`
+        )
+        .join("") +
+      "</div>";
+
+    for (const link of funnelStepContent.querySelectorAll("[data-funnel-share]")) {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const latest = getLatestSubmission();
+        const project =
+          state.matches.find((item) => item.id === state.activeProjectId) ||
+          projects.find((item) => item.id === latest?.projectId);
+        if (project) {
+          window.open(createShareLink(link.dataset.funnelShare, project), "_blank", "noopener,noreferrer");
+        }
+      });
+    }
+
+    const nextBtn = document.createElement("button");
+    nextBtn.type = "button";
+    nextBtn.className =
+      "rounded-xl bg-civic-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-civic-600";
+    nextBtn.textContent = "Next";
+    nextBtn.addEventListener("click", () => {
+      state.funnelStep = 3;
+      renderCompletionFunnel();
+    });
+
+    const skipBtn = document.createElement("button");
+    skipBtn.type = "button";
+    skipBtn.className =
+      "rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700";
+    skipBtn.textContent = "Skip";
+    skipBtn.addEventListener("click", () => {
+      state.funnelStep = 3;
+      renderCompletionFunnel();
+    });
+    funnelActions.append(skipBtn, nextBtn);
+    return;
+  }
+
+  funnelStepContent.innerHTML =
+    '<p class="text-sm text-slate-700">Great work. Review your submissions and track updates on each project.</p>';
+  const seeBtn = document.createElement("button");
+  seeBtn.type = "button";
+  seeBtn.className =
+    "rounded-xl bg-civic-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-civic-600";
+  seeBtn.textContent = "See my past submissions";
+  seeBtn.addEventListener("click", () => {
+    pastSubmissionsPanel.hidden = false;
+    pastSubmissionsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (state.pendingBadgeCelebration) {
+      triggerBadgeCelebration();
+      state.pendingBadgeCelebration = false;
+    }
+  });
+  funnelActions.appendChild(seeBtn);
+}
+
+function getStatusBadgeClass(status) {
+  const normalized = (status || "").toLowerCase();
+  if (normalized.includes("accepted")) {
+    return "bg-emerald-100 text-emerald-700 border-emerald-200";
+  }
+  if (normalized.includes("review")) {
+    return "bg-amber-100 text-amber-800 border-amber-200";
+  }
+  if (normalized.includes("pending")) {
+    return "bg-sky-100 text-sky-700 border-sky-200";
+  }
+  if (normalized.includes("rejected") || normalized.includes("declined")) {
+    return "bg-rose-100 text-rose-700 border-rose-200";
+  }
+  return "bg-slate-100 text-slate-700 border-slate-200";
+}
+
+function renderSubmissionDetail() {
+  const allSubmissions = getAllSubmissions();
+  const selected = allSubmissions.find((item) => item.id === state.selectedSubmissionId);
+  if (!selected) {
+    submissionDetailView.hidden = true;
+    return;
+  }
+
+  pastSubmissionsPanel.hidden = false;
+  submissionDetailView.hidden = false;
+  const project = projects.find((item) => item.id === selected.projectId);
+  const statusClass = getStatusBadgeClass(selected.status);
+  submissionDetailContent.innerHTML = `
+    <article class="rounded-xl border border-slate-200 bg-white p-3 shadow-[0_8px_20px_rgba(14,116,144,0.12)]">
+      <p class="text-sm font-semibold">${selected.projectTitle}</p>
+      <p class="mt-1 text-xs text-slate-600">Submitted ${selected.submittedAt} · ${
+        selected.stance === "agree" ? "Agree" : "Disagree"
+      }</p>
+      <p class="mt-1"><span class="inline-block rounded-full border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${statusClass}">${selected.status || "Pending"}</span></p>
+      <p class="mt-1 text-xs text-civic-700">${selected.update}</p>
+    </article>
+
+    <article class="mt-3 rounded-xl border border-slate-200 bg-white p-3 shadow-[0_8px_20px_rgba(14,116,144,0.12)]">
+      <h4 class="text-sm font-semibold">Project summary</h4>
+      <p class="mt-1 text-sm text-slate-700">${project?.summary || "Summary unavailable."}</p>
+      <div class="mt-2 flex flex-wrap gap-1">
+        ${(project?.topics || [])
+          .map(
+            (topic) =>
+              `<span class="inline-block rounded-full bg-civic-100 px-2 py-0.5 text-xs font-medium text-civic-700">${topicMeta[topic]?.icon || "•"} ${topic}</span>`
+          )
+          .join("")}
+      </div>
+      <p class="mt-2 text-xs text-slate-600">Institution: ${project?.institution || "Unknown"}</p>
+      <p class="mt-1 text-xs text-slate-600">Deadline: ${project?.deadline || "Unknown"}</p>
+      <h5 class="mt-3 text-xs font-semibold uppercase tracking-wide text-slate-600">Key points</h5>
+      <ul class="mt-1 list-disc pl-5 text-sm text-slate-700">
+        ${(project?.keyPoints || ["No key points available."])
+          .map((point) => `<li>${point}</li>`)
+          .join("")}
+      </ul>
+    </article>
+
+    <article class="mt-3 rounded-xl border border-slate-200 bg-white p-3 shadow-[0_8px_20px_rgba(14,116,144,0.12)]">
+      <h4 class="text-sm font-semibold">Your submitted opinion</h4>
+      <p class="mt-1 text-sm text-slate-700">${selected.submittedOpinion || "No opinion text available."}</p>
+    </article>
+
+    <article class="mt-3 rounded-xl border border-slate-200 bg-white p-3 shadow-[0_8px_20px_rgba(14,116,144,0.12)]">
+      <h4 class="text-sm font-semibold">Opinions from others</h4>
+      <div class="mt-2 grid gap-2">
+        ${(selected.opinionsFromOthers || [])
+          .map(
+            (opinion) =>
+              `<p class="rounded-lg border border-slate-200 bg-slate-50 p-2 text-sm text-slate-700">${opinion}</p>`
+          )
+          .join("")}
+      </div>
+    </article>
+  `;
+}
+
 function renderResults() {
   projectList.innerHTML = "";
   renderResultIntro();
+  renderBadges();
+  renderCompletionFunnel();
+  renderPastSubmissions();
+  renderSubmissionDetail();
   const city = getSelectedCity();
 
   if (!state.matches.length) {
@@ -633,7 +1198,6 @@ function renderResults() {
   }
 
   renderDetail();
-  renderPastSubmissions();
 }
 
 function createShareLink(network, project) {
@@ -675,6 +1239,11 @@ function getMockAssistantReply(project, stance, userText, assistantTurn) {
 }
 
 function renderDetail() {
+  const previousModal = document.getElementById("ideation-modal");
+  if (previousModal && previousModal.parentElement === document.body) {
+    previousModal.remove();
+  }
+
   const project = state.matches.find((item) => item.id === state.activeProjectId);
   if (!project) {
     projectDetail.innerHTML = '<p class="text-sm text-slate-600">Select a project to read the details.</p>';
@@ -685,6 +1254,9 @@ function renderDetail() {
     <span class="mb-3 inline-block rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">${project.institution}</span>
     <h3 class="text-xl font-semibold">${project.plainTitle}</h3>
     <p class="mt-1 text-sm text-slate-600">${project.realTitle}</p>
+    <div class="mt-2 flex flex-wrap gap-2">
+      <a class="font-semibold text-civic-700 underline decoration-2 underline-offset-2" href="${project.officialUrl}" target="_blank" rel="noopener noreferrer">Open official project page</a>
+    </div>
     <p class="mt-2 text-sm text-slate-600"><span class="font-semibold text-slate-700">${project.opinionCount.toLocaleString("en-US")}</span> opinions already submitted</p>
     <div class="mt-3 flex flex-wrap gap-1">
       ${project.topics
@@ -733,20 +1305,13 @@ function renderDetail() {
       <div id="manual-submit-prompt" class="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900" hidden>
         Great. Now submit manually on the official platform: create your account, verify your identity, paste your final opinion, and send it.
       </div>
-      <div id="final-draft-panel" class="mt-3 rounded-lg border border-civic-200 bg-civic-50 p-3" hidden>
-        <p class="text-sm font-semibold text-civic-800">Your drafted opinion</p>
-        <textarea id="final-draft-text" class="mt-2 w-full rounded-xl border border-civic-200 bg-white p-3 text-sm text-slate-700" rows="6" readonly></textarea>
-        <div class="mt-2 flex flex-wrap justify-end gap-2">
-          <button type="button" id="copy-final-draft" class="rounded-xl bg-civic-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-civic-600">Copy to clipboard</button>
-        </div>
-        <p id="copy-draft-feedback" class="mt-2 text-xs text-slate-600" hidden></p>
-      </div>
       <p id="send-feedback" class="mt-2 text-sm text-slate-600" hidden></p>
     </div>
 
-    <div id="ideation-modal" class="fixed inset-0 z-50 hidden items-center justify-center overflow-y-auto p-4" aria-hidden="true">
+    <div id="ideation-modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
       <div id="ideation-backdrop" class="absolute inset-0 bg-slate-900/60 opacity-0 transition-opacity duration-300"></div>
-      <div id="ideation-panel" class="relative my-auto w-full max-w-2xl translate-y-4 scale-95 rounded-2xl border border-civic-200 bg-gradient-to-br from-civic-50 via-white to-amber-50 p-4 opacity-0 shadow-[0_30px_80px_rgba(15,23,42,0.45)] transition-all duration-300 max-h-[90vh] overflow-y-auto">
+      <div class="relative z-10 flex min-h-full items-center justify-center p-4">
+      <div id="ideation-panel" class="relative w-full max-w-2xl translate-y-4 scale-95 rounded-2xl border border-civic-200 bg-gradient-to-br from-civic-50 via-white to-amber-50 p-4 opacity-0 shadow-[0_30px_80px_rgba(15,23,42,0.45)] transition-all duration-300 max-h-[90vh] overflow-y-auto">
         <div class="mb-2 flex items-start justify-between gap-3">
           <div>
             <p class="text-xs font-bold uppercase tracking-wide text-civic-700">Ideation Studio</p>
@@ -775,22 +1340,7 @@ function renderDetail() {
           <button type="button" id="modal-close-after-steps" class="mt-3 rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white">Close ideation studio</button>
         </div>
       </div>
-    </div>
-
-    <div class="mt-3 flex flex-wrap gap-2">
-      <a class="font-semibold text-civic-700 underline decoration-2 underline-offset-2" href="${project.officialUrl}" target="_blank" rel="noopener noreferrer">Open official project page</a>
-    </div>
-    <p class="mt-1 text-xs text-slate-600">Manual process: create an account on the official platform, verify your identity, paste your draft opinion, and submit it there.</p>
-
-    <h4 class="mt-4 text-base font-semibold">Share with friends and family</h4>
-    <p class="mt-1 text-sm text-slate-600">The more people participate, the stronger the signal to decision-makers.</p>
-    <div class="mt-2 flex flex-wrap gap-2">
-      ${Object.keys(socialMeta)
-        .map(
-          (network) =>
-            `<a class="inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs transition hover:-translate-y-0.5 hover:scale-[1.02] ${socialMeta[network].chipClass}" href="${createShareLink(network, project)}" target="_blank" rel="noopener noreferrer"><span class="inline-flex items-center justify-center rounded-full bg-white p-1 ${socialMeta[network].iconClass}">${socialMeta[network].svg}</span><span class="font-semibold">${network}</span></a>`
-        )
-        .join("")}
+      </div>
     </div>
   `;
 
@@ -809,11 +1359,11 @@ function renderDetail() {
   const modalSendSteps = document.getElementById("modal-send-steps");
   const modalCloseAfterSteps = document.getElementById("modal-close-after-steps");
   const manualSubmitPrompt = document.getElementById("manual-submit-prompt");
-  const finalDraftPanel = document.getElementById("final-draft-panel");
-  const finalDraftTextArea = document.getElementById("final-draft-text");
-  const copyFinalDraftButton = document.getElementById("copy-final-draft");
-  const copyDraftFeedback = document.getElementById("copy-draft-feedback");
   const sendFeedback = document.getElementById("send-feedback");
+
+  if (ideationModal.parentElement !== document.body) {
+    document.body.appendChild(ideationModal);
+  }
 
   let selectedStance = null;
   let assistantTurn = 0;
@@ -821,7 +1371,6 @@ function renderDetail() {
   let userInteractionCount = 0;
   let draftFinalized = false;
   let latestUserMessage = "";
-  let finalizedDraftText = "";
 
   function buildFinalDraft(projectItem, stance, userMessage) {
     const stanceLine =
@@ -843,12 +1392,14 @@ function renderDetail() {
 
   function openIdeationModal() {
     ideationModal.classList.remove("hidden");
-    ideationModal.classList.add("flex");
     ideationModal.setAttribute("aria-hidden", "false");
-    if (userInteractionCount < 5 || draftFinalized) {
+    document.body.classList.add("overflow-hidden");
+    if (userInteractionCount < 2 || draftFinalized) {
       sendDecision.classList.add("hidden");
       sendDecision.classList.remove("flex");
     }
+    ideationModal.scrollTop = 0;
+    ideationPanel.scrollTop = 0;
     window.requestAnimationFrame(() => {
       ideationBackdrop.classList.remove("opacity-0");
       ideationPanel.classList.remove("opacity-0", "scale-95", "translate-y-4");
@@ -860,8 +1411,8 @@ function renderDetail() {
     ideationPanel.classList.add("opacity-0", "scale-95", "translate-y-4");
     window.setTimeout(() => {
       ideationModal.classList.add("hidden");
-      ideationModal.classList.remove("flex");
       ideationModal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("overflow-hidden");
     }, 300);
   }
 
@@ -899,11 +1450,7 @@ function renderDetail() {
       sendChatButton.disabled = false;
       sendChatButton.hidden = false;
       manualSubmitPrompt.hidden = true;
-      finalDraftPanel.hidden = true;
-      finalDraftTextArea.value = "";
-      copyDraftFeedback.hidden = true;
       latestUserMessage = "";
-      finalizedDraftText = "";
       openIdeationModalButton.disabled = false;
       ideationStatus.textContent = `Position selected: ${selectedStance === "agree" ? "Agree" : "Disagree"}. Open chat to start ideation.`;
       pushChat("assistant", getMockAssistantReply(project, selectedStance, "", assistantTurn));
@@ -945,7 +1492,7 @@ function renderDetail() {
     opinionInput.value = "";
     sendFeedback.hidden = true;
 
-    if (!askedDecision && userInteractionCount >= 5) {
+    if (!askedDecision && userInteractionCount >= 2) {
       pushChat("assistant", "You now have a strong draft. If you are ready, you can send your opinion to the official platform.");
       sendDecision.classList.remove("hidden");
       sendDecision.classList.add("flex");
@@ -954,17 +1501,25 @@ function renderDetail() {
   });
 
   decisionSend.addEventListener("click", () => {
+    const submissionId = `user-${Date.now()}`;
+    const finalOpinionText = buildFinalDraft(project, selectedStance || "agree", latestUserMessage);
     state.userSubmissions.unshift({
+      id: submissionId,
       projectId: project.id,
       projectTitle: project.plainTitle,
       stance: selectedStance || "agree",
       submittedAt: "Just now",
+      status: "Draft finalized",
       update: "Status: Draft finalized with assistant. Manual platform submission pending.",
+      submittedOpinion: finalOpinionText,
+      opinionsFromOthers: project.communityOpinions,
     });
 
     modalSendSteps.hidden = false;
     draftFinalized = true;
-    finalizedDraftText = buildFinalDraft(project, selectedStance || "agree", latestUserMessage);
+    state.funnelStep = 1;
+    state.selectedSubmissionId = submissionId;
+    state.pendingBadgeCelebration = true;
     opinionInput.value = "";
     opinionInput.disabled = true;
     opinionInput.hidden = true;
@@ -976,61 +1531,61 @@ function renderDetail() {
       "Follow the easy steps in the ideation studio to submit your opinion manually.";
     sendFeedback.hidden = false;
     ideationStatus.textContent = "Draft finalized. Ready for manual platform submission.";
+    renderBadges();
+    renderCompletionFunnel();
     renderPastSubmissions();
+    renderSubmissionDetail();
   });
 
   modalCloseAfterSteps.addEventListener("click", () => {
     manualSubmitPrompt.hidden = false;
-    if (finalizedDraftText) {
-      finalDraftPanel.hidden = false;
-      finalDraftTextArea.value = finalizedDraftText;
-    }
     closeIdeationModal();
-  });
-
-  copyFinalDraftButton.addEventListener("click", async () => {
-    const text = finalDraftTextArea.value.trim();
-    if (!text) {
-      copyDraftFeedback.textContent = "No drafted opinion available to copy yet.";
-      copyDraftFeedback.hidden = false;
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(text);
-      copyDraftFeedback.textContent = "Copied. You can now paste this into the official platform.";
-      copyDraftFeedback.hidden = false;
-    } catch (_error) {
-      finalDraftTextArea.focus();
-      finalDraftTextArea.select();
-      copyDraftFeedback.textContent = "Clipboard blocked. Draft selected, press Ctrl/Cmd+C to copy.";
-      copyDraftFeedback.hidden = false;
-    }
+    window.setTimeout(() => {
+      if (!completionFunnel) {
+        return;
+      }
+      completionFunnel.hidden = false;
+      const stickyOffset = 84;
+      const targetTop = completionFunnel.getBoundingClientRect().top + window.scrollY - stickyOffset;
+      window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
+    }, 320);
   });
 }
 
 function renderPastSubmissions() {
   pastSubmissionsList.innerHTML = "";
-  if (!state.userSubmissions.length) {
+  const allSubmissions = getAllSubmissions();
+  if (!allSubmissions.length) {
     pastSubmissionsPanel.hidden = true;
+    submissionDetailView.hidden = true;
     return;
   }
 
   pastSubmissionsPanel.hidden = false;
+  submissionDetailView.hidden = state.selectedSubmissionId ? false : true;
 
-  for (const item of state.userSubmissions) {
+  for (const item of allSubmissions) {
+    const statusClass = getStatusBadgeClass(item.status);
     const card = document.createElement("article");
-    card.className = "rounded-lg border border-slate-200 bg-white p-3";
+    card.className =
+      "cursor-pointer rounded-lg border border-civic-200 bg-white p-3 shadow-[0_8px_20px_rgba(14,116,144,0.12)] transition hover:-translate-y-0.5 hover:border-civic-400";
     card.innerHTML = `
       <p class="text-sm font-semibold">${item.projectTitle}</p>
       <p class="mt-1 text-xs text-slate-600">You voted ${item.stance === "agree" ? "Agree" : "Disagree"} - ${item.submittedAt}</p>
+      <p class="mt-1"><span class="inline-block rounded-full border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide ${statusClass}">${item.status || "Pending"}</span></p>
       <p class="mt-1 text-xs text-civic-700">${item.update}</p>
     `;
+    card.addEventListener("click", () => {
+      state.selectedSubmissionId = item.id;
+      renderSubmissionDetail();
+      submissionDetailView.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
     pastSubmissionsList.appendChild(card);
   }
 }
 
 renderCities();
+renderLocationSuggestions();
 renderTopics();
 renderTopicHint();
 renderResultIntro();
