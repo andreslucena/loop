@@ -508,6 +508,7 @@ function handleBrowserNavigation() {
 window.addEventListener("hashchange", handleBrowserNavigation);
 
 const STEP_TRANSITION_MS = 260;
+const STEP_TITLE_SCROLL_OFFSET = 96;
 
 function parseStepFromLocation() {
   const match = window.location.hash.match(/^#step-(\d)$/);
@@ -544,6 +545,16 @@ function scrollToProgressTabs() {
     return;
   }
   const targetTop = progressTabs.getBoundingClientRect().top + window.scrollY - 12;
+  window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
+}
+
+function scrollToStepTitle(stepNumber) {
+  const panel = document.querySelector(`[data-step="${stepNumber}"]`);
+  const heading = panel?.querySelector("h2");
+  if (!heading) {
+    return;
+  }
+  const targetTop = heading.getBoundingClientRect().top + window.scrollY - STEP_TITLE_SCROLL_OFFSET;
   window.scrollTo({ top: Math.max(0, targetTop), behavior: "smooth" });
 }
 
@@ -621,7 +632,15 @@ function setStep(step, options = {}) {
   }
 
   if (shouldScrollToProgress) {
-    scrollToProgressTabs();
+    if (targetStep === 3) {
+      window.setTimeout(() => {
+        if (state.step === 3) {
+          scrollToStepTitle(3);
+        }
+      }, STEP_TRANSITION_MS + 20);
+    } else {
+      scrollToProgressTabs();
+    }
   }
 }
 
@@ -734,8 +753,8 @@ function renderTopics() {
     chip.classList.toggle("bg-loop-blue/10", active);
     chip.classList.toggle("text-loop-ink", active);
     chip.classList.toggle("font-semibold", active);
-    chip.classList.toggle("ring-1", active);
-    chip.classList.toggle("ring-loop-blue/25", active);
+    chip.classList.toggle("ring-2", active);
+    chip.classList.toggle("ring-loop-blue/30", active);
     chip.setAttribute("aria-pressed", String(active));
     chip.addEventListener("click", () => {
       if (state.topics.has(topic)) {
